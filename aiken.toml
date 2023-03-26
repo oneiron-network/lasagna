@@ -1,0 +1,14 @@
+name = "oneiron-network/lasagna"
+version = "0.0.0"
+license = "Apache-2.0"
+description = "Aiken contracts for project 'oneiron-network/lasagna'"
+
+[repository]
+user = "oneiron-network"
+project = "lasagna"
+platform = "github"
+
+[[dependencies]]
+name = "aiken-lang/stdlib"
+version = "main"
+source = "github"
