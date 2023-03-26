@@ -9,6 +9,10 @@ pub fn zero() {
   Affine { x: 0, y: 0, infinity: True }
 }
 
+pub fn one(curve: CurveConfig) {
+  curve.generator
+}
+
 pub fn on_curve(curve: CurveConfig, point: Affine) -> Bool {
   let (x, y) =
     (point.x, point.y)
@@ -69,6 +73,36 @@ pub fn add(curve: CurveConfig, p1: Affine, p2: Affine) -> Affine {
   }
 }
 
+pub fn scalar_mul(curve: CurveConfig, p: Affine, n: Int) -> Affine {
+  if n < 0 {
+    scalar_mul(curve, neg(curve, p), -n)
+  } else {
+    scalar_mul_internal(curve, p, n % curve.scalar_field.modulus, zero())
+  }
+}
+
+fn scalar_mul_internal(
+  curve: CurveConfig,
+  p: Affine,
+  n: Int,
+  r: Affine,
+) -> Affine {
+  when n is {
+    0 ->
+      r
+    _ -> {
+      let (p, n, r) =
+        when n % 2 is {
+          0 ->
+            (double(curve, p), n / 2, r)
+          _ ->
+            (p, n - 1, add(curve, r, p))
+        }
+      scalar_mul_internal(curve, p, n, r)
+    }
+  }
+}
+
 // Tests
 
 test double_zero() {
@@ -111,4 +145,44 @@ test points_on_the_curve() {
   let p =
     Affine { x: f.neg(curve.base_field.modulus, 1), y: 2, infinity: False }
   check_on_the_curve_recur(curve, [p, curve.generator])
+}
+
+test scalar_mul_zero() {
+  let curve =
+    pallas()
+  is_zero(scalar_mul(curve, zero(), 0))? && is_zero(
+    scalar_mul(curve, one(curve), 0),
+  )?
+}
+
+test scalar_mul_one() {
+  let curve =
+    pallas()
+  let p =
+    one(curve)
+  scalar_mul(curve, p, 1) == p
+}
+
+test scalar_mul_two() {
+  let curve =
+    pallas()
+  let p =
+    one(curve)
+  scalar_mul(curve, p, 2) == double(curve, p)
+}
+
+test scalar_mul_three() {
+  let curve =
+    pallas()
+  let p =
+    one(curve)
+  scalar_mul(curve, p, 3) == add(curve, p, double(curve, p))
+}
+
+test scalar_mul_four() {
+  let curve =
+    pallas()
+  let p =
+    one(curve)
+  scalar_mul(curve, p, 4) == double(curve, double(curve, p))
 }

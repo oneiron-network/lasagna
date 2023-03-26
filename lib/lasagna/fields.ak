@@ -26,21 +26,23 @@ pub fn pow(m: Int, x: Int, y: Int) -> Int {
   if y < 0 {
     pow(m, inverse(m, x), -y)
   } else {
-    when y is {
-      0 ->
-        1
-      1 ->
-        x % m
-      _ -> {
-        let z =
-          pow(m, x, y / 2)
+    pow_internal(m, x, y, 1)
+  }
+}
+
+fn pow_internal(m: Int, x: Int, y: Int, r: Int) -> Int {
+  when y is {
+    0 ->
+      r
+    _ -> {
+      let (x, y, r) =
         when y % 2 is {
           0 ->
-            square(m, z)
+            (square(m, x), y / 2, r)
           _ ->
-            mul(m, x, square(m, z))
+            (x, y - 1, mul(m, x, r))
         }
-      }
+      pow_internal(m, x, y, r)
     }
   }
 }
