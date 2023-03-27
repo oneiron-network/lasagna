@@ -65,7 +65,16 @@ pub fn neg(m: Int, x: Int) -> Int {
 
 /// Computes the multiplicative inverse of x in the field with the given modulus.
 pub fn inverse(m: Int, x: Int) -> Int {
-  inverse_internal(m, m, x, 0, 1)
+  if x < 0 {
+    inverse(m, -x)
+  } else {
+    when x is {
+      1 ->
+        1
+      _ ->
+        inverse_internal(m, m, x, 0, 1)
+    }
+  }
 }
 
 pub fn inverse_internal(m: Int, r: Int, new_r: Int, t: Int, new_t: Int) -> Int {
@@ -143,4 +152,10 @@ test pow_in_fp() {
   let (r, r1) =
     (pow(m, x, y), pow(m, x, -y))
   (r > 0)? && (r < m)? && (r1 > 0)? && (r1 < m)? && (mul(m, r, r1) == 1)?
+}
+
+test invert_one_in_fp() {
+  let m =
+    fp().modulus
+  (inverse(m, 1) == 1)?
 }

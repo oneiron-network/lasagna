@@ -26,7 +26,11 @@ pub fn on_curve(curve: CurveConfig, point: Affine) -> Bool {
 }
 
 pub fn neg(curve: CurveConfig, p: Affine) {
-  Affine { ..p, y: f.neg(curve.base_field.modulus, p.y) }
+  if is_zero(p) {
+    p
+  } else {
+    Affine { ..p, y: f.neg(curve.base_field.modulus, p.y) }
+  }
 }
 
 pub fn double(curve: CurveConfig, p: Affine) -> Affine {
