@@ -2,11 +2,9 @@
 
 Layered Zero-Knowledge Proof library for Cardano on-chain scripts.
 
-## Building
+## Pre-Requisites
 
-```sh
-aiken build
-```
+[Aiken](https://aiken-lang.org) - a functional programming language for building Cardano on-chain scripts. [Install](https://aiken-lang.org/getting-started) it first.
 
 ## Testing
 
