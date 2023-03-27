@@ -1,26 +1,41 @@
 use lasagna/fields.{FieldConfig, fp, fq}
 use lasagna/fields as f
 
+/// Affine coordinates `(x, y)` representation of a curve point.
+/// The point at infinity is represented by `(x, y) = (0, 0)` and `infinity = True`.
 pub type Affine {
   x: Int,
   y: Int,
   infinity: Bool,
 }
 
+/// Projective (Jacobian) coordinates `(X, Y, Z)` representation of a curve point.
+/// Affine coordinates `(x, y)` are related to projective as `(x, y) = (X/Z^2, Y/Z^3)`.
+/// The point at infinity is represented by `(X, Y, Z) = (0, 1, 0)`.
 pub type Projective {
   x: Int,
   y: Int,
   z: Int,
 }
 
+/// Curve configuration. Defines the curve equation and the base field. Scalar field is given for convenience.
+/// The curve equation is `y^2 = x^3 + b`.
 pub type CurveConfig {
+  /// The base field of the curve. The curve equation is defined over this field, meaning that the `x` and `y` 
+  /// coordinates, and the `b` coefficient are elements of this field.
   base_field: FieldConfig,
+  /// The scalar field of the curve. This field represents the set of scalars that can be used to in the scalar
+  /// multiplication of the curve points.
   scalar_field: FieldConfig,
   // a = 0 for pasta curves
+  /// The constant `b` in the curve equation.
   b: Int,
+  /// The generator point of the curve. All points on the curve can be obtained by scalar multiplication of this 
+  /// point by elements of the scalar field.
   generator: Affine,
 }
 
+/// Transform a point from affine coordinates to projective coordinates.
 pub fn to_projective(affine: Affine) -> Projective {
   when affine.infinity is {
     True ->
@@ -30,6 +45,8 @@ pub fn to_projective(affine: Affine) -> Projective {
   }
 }
 
+/// Normalize a point in projective coordinates. This means that the `z` coordinate is set to `1` for any point
+/// other than the point at infinity.
 pub fn normalize_projective(curve: CurveConfig, p: Projective) -> Projective {
   when p.z is {
     0 ->
@@ -41,6 +58,7 @@ pub fn normalize_projective(curve: CurveConfig, p: Projective) -> Projective {
   }
 }
 
+/// Transform a point from projective coordinates to affine coordinates.
 pub fn to_affine(curve: CurveConfig, projective: Projective) -> Affine {
   when projective.z is {
     0 ->
@@ -61,6 +79,7 @@ pub fn to_affine(curve: CurveConfig, projective: Projective) -> Affine {
   }
 }
 
+/// Configuration for the Pallas curve.
 pub fn pallas() {
   CurveConfig {
     base_field: fp(),
@@ -74,6 +93,7 @@ pub fn pallas() {
   }
 }
 
+/// Configuration for the Vesta curve.
 pub fn vesta() {
   CurveConfig {
     base_field: fq(),

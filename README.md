@@ -26,6 +26,11 @@ aiken docs
 
 [Aiken's user manual](https://aiken-lang.org).
 
-## Copyright
 
-(c) 2023-present - Ivan Mikushin, Oneiron Systems.
+---
+
+### Copyright
+
+Licensed under the [Apache License v2.0](https://github.com/oneiron-network/lasagna/blob/main/LICENSE).
+
+© 2023-present — Ivan Mikushin, Oneiron Systems.

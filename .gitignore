@@ -3,10 +3,11 @@ artifacts/
 # Aiken's project working directory
 build/
 # Aiken's default documentation export
-docs/
+#docs/
 
 .idea/
 .vscode/
 *.iml
 .DS_Store
 .fleet/
+/plutus.json

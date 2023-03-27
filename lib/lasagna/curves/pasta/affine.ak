@@ -1,18 +1,22 @@
 use lasagna/curves/pasta.{Affine, CurveConfig, pallas}
 use lasagna/fields as f
 
+/// Check if a point is the zero point (the point at infinity). 
 pub fn is_zero(p: Affine) {
   p.infinity
 }
 
+/// Return the zero point (the point at infinity).
 pub fn zero() {
   Affine { x: 0, y: 0, infinity: True }
 }
 
+/// Return the generator point of the curve.
 pub fn one(curve: CurveConfig) {
   curve.generator
 }
 
+/// Check if a point is on the given curve.
 pub fn on_curve(curve: CurveConfig, point: Affine) -> Bool {
   let (x, y) =
     (point.x, point.y)
@@ -25,6 +29,7 @@ pub fn on_curve(curve: CurveConfig, point: Affine) -> Bool {
   }
 }
 
+/// Negate a curve point: `-P`.
 pub fn neg(curve: CurveConfig, p: Affine) {
   if is_zero(p) {
     p
@@ -33,6 +38,7 @@ pub fn neg(curve: CurveConfig, p: Affine) {
   }
 }
 
+/// Double a curve point: `P + P`.
 pub fn double(curve: CurveConfig, p: Affine) -> Affine {
   if is_zero(p) {
     p
@@ -51,6 +57,7 @@ pub fn double(curve: CurveConfig, p: Affine) -> Affine {
   }
 }
 
+/// Add two curve points: `P1 + P2`.
 pub fn add(curve: CurveConfig, p1: Affine, p2: Affine) -> Affine {
   if is_zero(p1) {
     p2
@@ -77,6 +84,7 @@ pub fn add(curve: CurveConfig, p1: Affine, p2: Affine) -> Affine {
   }
 }
 
+/// Scalar multiplication: `n * P`.
 pub fn scalar_mul(curve: CurveConfig, p: Affine, n: Int) -> Affine {
   if n < 0 {
     scalar_mul(curve, neg(curve, p), -n)

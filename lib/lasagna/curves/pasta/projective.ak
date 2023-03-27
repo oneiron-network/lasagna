@@ -3,18 +3,22 @@ use lasagna/curves/pasta.{
 }
 use lasagna/fields as f
 
+/// Check if a point is the zero point (the point at infinity).
 pub fn is_zero(p: Projective) -> Bool {
   p.z == 0
 }
 
+/// Return the zero point (the point at infinity).
 pub fn zero() {
   Projective(0, 1, 0)
 }
 
+/// Return the generator point of the curve.
 pub fn one(curve: CurveConfig) {
   to_projective(curve.generator)
 }
 
+/// Negate a curve point: `-P`.
 pub fn neg(curve: CurveConfig, p: Projective) -> Projective {
   if is_zero(p) {
     p
@@ -23,6 +27,7 @@ pub fn neg(curve: CurveConfig, p: Projective) -> Projective {
   }
 }
 
+/// Double a curve point: `P + P`.
 pub fn double(curve: CurveConfig, p: Projective) -> Projective {
   let m =
     curve.base_field.modulus
@@ -45,6 +50,7 @@ pub fn double(curve: CurveConfig, p: Projective) -> Projective {
   Projective(x3, y3, z3)
 }
 
+/// Add two curve points: `P1 + P2`.
 pub fn add(curve: CurveConfig, p1: Projective, p2: Projective) -> Projective {
   if is_zero(p1) {
     p2
@@ -91,6 +97,7 @@ pub fn add(curve: CurveConfig, p1: Projective, p2: Projective) -> Projective {
   }
 }
 
+/// Scalar multiplication: `n * P`.
 pub fn scalar_mul(curve: CurveConfig, p: Projective, n: Int) -> Projective {
   if n < 0 {
     scalar_mul(curve, neg(curve, p), -n)

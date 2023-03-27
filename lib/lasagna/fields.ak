@@ -1,27 +1,33 @@
+/// Field configuration: `modulus` is the prime number that defines the field.
 pub type FieldConfig {
   modulus: Int,
 }
 
+/// Field `Fp` with `modulus = 28948022309329048855892746252171976963363056481941560715954676764349967630337`.
 pub fn fp() {
   FieldConfig {
     modulus: 28948022309329048855892746252171976963363056481941560715954676764349967630337,
   }
 }
 
+/// Field `Fq` with `modulus = 28948022309329048855892746252171976963363056481941647379679742748393362948097`.
 pub fn fq() {
   FieldConfig {
     modulus: 28948022309329048855892746252171976963363056481941647379679742748393362948097,
   }
 }
 
+/// Multiplication in the field with modulus `m`.
 pub fn mul(m: Int, x: Int, y: Int) -> Int {
   x * y % m
 }
 
+/// Squaring in the field with modulus `m`.
 pub fn square(m: Int, x: Int) -> Int {
   mul(m, x, x)
 }
 
+/// Exponentiation in the field with modulus `m`.
 pub fn pow(m: Int, x: Int, y: Int) -> Int {
   if y < 0 {
     pow(m, inverse(m, x), -y)
@@ -47,23 +53,27 @@ fn pow_internal(m: Int, x: Int, y: Int, r: Int) -> Int {
   }
 }
 
+/// Division in the field with modulus `m`.
 pub fn div(m: Int, x: Int, y: Int) -> Int {
   mul(m, x, inverse(m, y))
 }
 
+/// Addition in the field with modulus `m`.
 pub fn add(m: Int, x: Int, y: Int) -> Int {
   ( x + y ) % m
 }
 
+/// Subtraction in the field with modulus `m`.
 pub fn sub(m: Int, x: Int, y: Int) -> Int {
   ( x - y ) % m
 }
 
+/// Negation in the field with modulus `m`.
 pub fn neg(m: Int, x: Int) -> Int {
   -x % m
 }
 
-/// Computes the multiplicative inverse of x in the field with the given modulus.
+/// Multiplicative inverse of `x` in the field with modulus `m`.
 pub fn inverse(m: Int, x: Int) -> Int {
   if x < 0 {
     inverse(m, -x)
@@ -77,7 +87,7 @@ pub fn inverse(m: Int, x: Int) -> Int {
   }
 }
 
-pub fn inverse_internal(m: Int, r: Int, new_r: Int, t: Int, new_t: Int) -> Int {
+fn inverse_internal(m: Int, r: Int, new_r: Int, t: Int, new_t: Int) -> Int {
   when new_r is {
     0 ->
       t % m
