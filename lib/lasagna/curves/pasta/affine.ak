@@ -1,3 +1,6 @@
+//// Elliptic curve operations in affine coordinates.
+//// See https://www.hyperelliptic.org/EFD/g1p/auto-shortw.html
+
 use lasagna/curves/pasta.{Affine, CurveConfig, pallas}
 use lasagna/fields as f
 

@@ -1,3 +1,6 @@
+//// Elliptic curve operations in projective (Jacobian) coordinates.
+//// See https://www.hyperelliptic.org/EFD/g1p/auto-shortw-jacobian-0.html
+
 use lasagna/curves/pasta.{
   CurveConfig, Projective, normalize_projective, pallas, to_projective,
 }
@@ -28,6 +31,7 @@ pub fn neg(curve: CurveConfig, p: Projective) -> Projective {
 }
 
 /// Double a curve point: `P + P`.
+/// See https://www.hyperelliptic.org/EFD/g1p/auto-shortw-jacobian-0.html#doubling-dbl-2009-l
 pub fn double(curve: CurveConfig, p: Projective) -> Projective {
   let m =
     curve.base_field.modulus
@@ -51,6 +55,8 @@ pub fn double(curve: CurveConfig, p: Projective) -> Projective {
 }
 
 /// Add two curve points: `P1 + P2`.
+/// See http://www.hyperelliptic.org/EFD/g1p/auto-shortw-jacobian-0.html#addition-madd-2007-bl
+/// Assumes `Z2 == 1`.
 pub fn add(curve: CurveConfig, p1: Projective, p2: Projective) -> Projective {
   if is_zero(p1) {
     p2
@@ -63,6 +69,7 @@ pub fn add(curve: CurveConfig, p1: Projective, p2: Projective) -> Projective {
       zero()
     }
   } else {
+    // ensure Z2 == 1
     let p2 =
       normalize_projective(curve, p2)
     let m =
