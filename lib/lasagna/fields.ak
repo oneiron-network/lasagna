@@ -1,3 +1,5 @@
+//// Fields and arithmetic operations used in the Pasta curves.
+
 /// Field configuration: `modulus` is the prime number that defines the field.
 pub type FieldConfig {
   modulus: Int,

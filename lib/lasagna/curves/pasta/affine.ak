@@ -1,7 +1,7 @@
 //// Elliptic curve operations in affine coordinates.
 //// See https://www.hyperelliptic.org/EFD/g1p/auto-shortw.html
 
-use lasagna/curves/pasta.{Affine, CurveConfig, pallas}
+use lasagna/curves/pasta.{Affine, CurveConfig, pallas, vesta}
 use lasagna/fields as f
 
 /// Check if a point is the zero point (the point at infinity). 
@@ -129,9 +129,9 @@ test double_zero() {
 }
 
 test sanity_generator_on_the_curve() {
-  let curve =
-    pallas()
-  on_curve(curve, curve.generator)?
+  let (p, v) =
+    (pallas(), vesta())
+  on_curve(p, p.generator)? && on_curve(v, v.generator)?
 }
 
 fn check_on_the_curve(curve: CurveConfig, p: Affine) -> Bool {

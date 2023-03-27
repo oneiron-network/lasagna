@@ -1,3 +1,6 @@
+//// Types and helper functions for Pasta elliptic curves as described
+//// in https://o1-labs.github.io/proof-systems/specs/pasta.html
+
 use lasagna/fields.{FieldConfig, fp, fq}
 use lasagna/fields as f
 
@@ -18,20 +21,22 @@ pub type Projective {
   z: Int,
 }
 
-/// Curve configuration. Defines the curve equation and the base field. Scalar field is given for convenience.
-/// The curve equation is `y^2 = x^3 + b`.
+/// Curve configuration. The curve equation is `y^2 = x^3 + b`.
+///
+/// `base_field` is the field over which the curve is defined: `x`, `y`, and `b` are elements of this field. 
+///
+/// `scalar_field` is the field over which the scalar multiplication of the curve points is defined:
+/// its elements are the scalars that can be used to multiply the curve points.
+///
+/// `b` is the constant in the curve equation.
+///
+/// `generator` is the generator point of the curve. All points on the curve can be obtained by scalar multiplication
+/// of this point by elements of the scalar field.
 pub type CurveConfig {
-  /// The base field of the curve. The curve equation is defined over this field, meaning that the `x` and `y` 
-  /// coordinates, and the `b` coefficient are elements of this field.
   base_field: FieldConfig,
-  /// The scalar field of the curve. This field represents the set of scalars that can be used to in the scalar
-  /// multiplication of the curve points.
   scalar_field: FieldConfig,
   // a = 0 for pasta curves
-  /// The constant `b` in the curve equation.
   b: Int,
-  /// The generator point of the curve. All points on the curve can be obtained by scalar multiplication of this 
-  /// point by elements of the scalar field.
   generator: Affine,
 }
 
@@ -79,7 +84,9 @@ pub fn to_affine(curve: CurveConfig, projective: Projective) -> Affine {
   }
 }
 
-/// Configuration for the Pallas curve.
+/// Configuration for the Pallas curve. Base field is `Fp`, scalar field is `Fq` (see `lasagna/fields.{fp, fq}`).
+/// The curve equation is `y^2 = x^3 + 5`.
+/// The generator point is `(1, 12418654782883325593414442427049395787963493412651469444558597405572177144507)`.
 pub fn pallas() {
   CurveConfig {
     base_field: fp(),
@@ -93,7 +100,9 @@ pub fn pallas() {
   }
 }
 
-/// Configuration for the Vesta curve.
+/// Configuration for the Vesta curve. Base field is `Fq`, scalar field is `Fp` (see `lasagna/fields.{fp, fq}`).
+/// The curve equation is `y^2 = x^3 + 5`.
+/// The generator point is `(1, 11426906929455361843568202299992114520848200991084027513389447476559454104162)`.
 pub fn vesta() {
   CurveConfig {
     base_field: fq(),

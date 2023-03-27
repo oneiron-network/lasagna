@@ -253,6 +253,8 @@
 <h1 id="module-name" class="module-name">
   <a href="#module-name">lasagna/curves/pasta</a>
 </h1>
+<p>Types and helper functions for Pasta elliptic curves as described
+in https://o1-labs.github.io/proof-systems/specs/pasta.html</p>
 
 
 
@@ -314,8 +316,13 @@ The point at infinity is represented by <code>(x, y) = (0, 0)</code> and <code>i
       
     </div>
     <div class="custom-type-constructors">
-      <div class="rendered-markdown"><p>Curve configuration. Defines the curve equation and the base field. Scalar field is given for convenience.
-The curve equation is <code>y^2 = x^3 + b</code>.</p>
+      <div class="rendered-markdown"><p>Curve configuration. The curve equation is <code>y^2 = x^3 + b</code>.</p>
+<p><code>base_field</code> is the field over which the curve is defined: <code>x</code>, <code>y</code>, and <code>b</code> are elements of this field. </p>
+<p><code>scalar_field</code> is the field over which the scalar multiplication of the curve points is defined:
+its elements are the scalars that can be used to multiply the curve points.</p>
+<p><code>b</code> is the constant in the curve equation.</p>
+<p><code>generator</code> is the generator point of the curve. All points on the curve can be obtained by scalar multiplication
+of this point by elements of the scalar field.</p>
 </div>
       
       <h3>Constructors</h3>
@@ -414,7 +421,9 @@ other than the point at infinity.</p>
       -->
       
     </div>
-    <div class="rendered-markdown"><p>Configuration for the Pallas curve.</p>
+    <div class="rendered-markdown"><p>Configuration for the Pallas curve. Base field is <code>Fp</code>, scalar field is <code>Fq</code> (see <code>lasagna/fields.{fp, fq}</code>).
+The curve equation is <code>y^2 = x^3 + 5</code>.
+The generator point is <code>(1, 12418654782883325593414442427049395787963493412651469444558597405572177144507)</code>.</p>
 </div>
   </div>
   
@@ -459,7 +468,9 @@ other than the point at infinity.</p>
       -->
       
     </div>
-    <div class="rendered-markdown"><p>Configuration for the Vesta curve.</p>
+    <div class="rendered-markdown"><p>Configuration for the Vesta curve. Base field is <code>Fq</code>, scalar field is <code>Fp</code> (see <code>lasagna/fields.{fp, fq}</code>).
+The curve equation is <code>y^2 = x^3 + 5</code>.
+The generator point is <code>(1, 11426906929455361843568202299992114520848200991084027513389447476559454104162)</code>.</p>
 </div>
   </div>
   
@@ -536,8 +547,8 @@ other than the point at infinity.</p>
       });
     </script>
     <script src="../../js/lunr.min.js?v=0.0.29"></script>
-    <script src="../../js/index.js?v=1679947098"></script>
+    <script src="../../js/index.js?v=1679954726"></script>
     <!-- Load the search index using JSONP to avoid CORS issues -->
-    <script src="../../search-data.js?v=1679947098"></script>
+    <script src="../../search-data.js?v=1679954726"></script>
   </body>
 </html>
