@@ -11,3 +11,5 @@ docs/
 .DS_Store
 .fleet/
 /plutus.json
+
+aiken.lock
