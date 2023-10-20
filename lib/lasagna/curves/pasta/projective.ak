@@ -33,24 +33,15 @@ pub fn neg(curve: CurveConfig, p: Projective) -> Projective {
 /// Double a curve point: `P + P`.
 /// See https://www.hyperelliptic.org/EFD/g1p/auto-shortw-jacobian-0.html#doubling-dbl-2009-l
 pub fn double(curve: CurveConfig, p: Projective) -> Projective {
-  let m =
-    curve.base_field.modulus
-  let (x, y, z) =
-    (p.x, p.y, p.z)
-  let (a, b) =
-    (x * x, y * y)
-  let c =
-    b * b
-  let d =
-    2 * ( ( x + b ) * ( x + b ) - a - c )
-  let e =
-    3 * a
-  let x3 =
-    f.sub(m, e * e, 2 * d)
-  let y3 =
-    f.sub(m, e * ( d - x3 ), 8 * c)
-  let z3 =
-    f.mul(m, 2 * y, z)
+  let m = curve.base_field.modulus
+  let (x, y, z) = (p.x, p.y, p.z)
+  let (a, b) = (x * x, y * y)
+  let c = b * b
+  let d = 2 * ( ( x + b ) * ( x + b ) - a - c )
+  let e = 3 * a
+  let x3 = f.sub(m, e * e, 2 * d)
+  let y3 = f.sub(m, e * ( d - x3 ), 8 * c)
+  let z3 = f.mul(m, 2 * y, z)
   Projective(x3, y3, z3)
 }
 
@@ -70,36 +61,21 @@ pub fn add(curve: CurveConfig, p1: Projective, p2: Projective) -> Projective {
     }
   } else {
     // ensure Z2 == 1
-    let p2 =
-      normalize_projective(curve, p2)
-    let m =
-      curve.base_field.modulus
-    let (x1, y1, z1) =
-      (p1.x, p1.y, p1.z)
-    let (x2, y2) =
-      (p2.x, p2.y)
-    let z1z1 =
-      z1 * z1
-    let u2 =
-      x2 * z1z1
-    let s2 =
-      y2 * z1 * z1z1
-    let h =
-      u2 - x1
-    let i =
-      2 * h * h
-    let j =
-      h * i
-    let r =
-      2 * ( s2 - y1 )
-    let v =
-      x1 * i
-    let x3 =
-      f.sub(m, r * r, j + 2 * v)
-    let y3 =
-      f.sub(m, r * ( v - x3 ), 2 * y1 * j)
-    let z3 =
-      f.mul(m, z1 * h, 2)
+    let p2 = normalize_projective(curve, p2)
+    let m = curve.base_field.modulus
+    let (x1, y1, z1) = (p1.x, p1.y, p1.z)
+    let (x2, y2) = (p2.x, p2.y)
+    let z1z1 = z1 * z1
+    let u2 = x2 * z1z1
+    let s2 = y2 * z1 * z1z1
+    let h = u2 - x1
+    let i = 2 * h * h
+    let j = h * i
+    let r = 2 * ( s2 - y1 )
+    let v = x1 * i
+    let x3 = f.sub(m, r * r, j + 2 * v)
+    let y3 = f.sub(m, r * ( v - x3 ), 2 * y1 * j)
+    let z3 = f.mul(m, z1 * h, 2)
     Projective(x3, y3, z3)
   }
 }
@@ -120,15 +96,12 @@ fn scalar_mul_internal(
   r: Projective,
 ) -> Projective {
   when n is {
-    0 ->
-      r
+    0 -> r
     _ -> {
       let (p, n, r) =
         when n % 2 is {
-          0 ->
-            (double(curve, p), n / 2, r)
-          _ ->
-            (p, n - 1, add(curve, r, p))
+          0 -> (double(curve, p), n / 2, r)
+          _ -> (p, n - 1, add(curve, r, p))
         }
       scalar_mul_internal(curve, p, n, r)
     }
@@ -138,26 +111,21 @@ fn scalar_mul_internal(
 // Tests
 
 test scalar_mul_zero() {
-  let curve =
-    pallas()
+  let curve = pallas()
   is_zero(scalar_mul(curve, zero(), 0))? && is_zero(
     scalar_mul(curve, one(curve), 0),
   )?
 }
 
 test scalar_mul_one() {
-  let curve =
-    pallas()
-  let p =
-    one(curve)
+  let curve = pallas()
+  let p = one(curve)
   scalar_mul(curve, p, 1) == p
 }
 
 test scalar_mul_two() {
-  let curve =
-    pallas()
-  let p =
-    one(curve)
+  let curve = pallas()
+  let p = one(curve)
   (normalize_projective(curve, scalar_mul(curve, p, 2)) == normalize_projective(
     curve,
     double(curve, p),
@@ -165,10 +133,8 @@ test scalar_mul_two() {
 }
 
 test scalar_mul_three() {
-  let curve =
-    pallas()
-  let p =
-    one(curve)
+  let curve = pallas()
+  let p = one(curve)
   (normalize_projective(curve, scalar_mul(curve, p, 3)) == normalize_projective(
     curve,
     add(curve, p, double(curve, p)),
@@ -176,10 +142,8 @@ test scalar_mul_three() {
 }
 
 test scalar_mul_four() {
-  let curve =
-    pallas()
-  let p =
-    one(curve)
+  let curve = pallas()
+  let p = one(curve)
   (normalize_projective(curve, scalar_mul(curve, p, 4)) == normalize_projective(
     curve,
     double(curve, double(curve, p)),

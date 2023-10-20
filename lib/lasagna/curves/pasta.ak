@@ -1,7 +1,7 @@
 //// Types and helper functions for Pasta elliptic curves as described
 //// in https://o1-labs.github.io/proof-systems/specs/pasta.html
 
-use lasagna/fields.{FieldConfig, fp, fq}
+use lasagna/curves/pasta/fields.{fp, fq}
 use lasagna/fields as f
 
 /// Affine coordinates `(x, y)` representation of a curve point.
@@ -33,8 +33,8 @@ pub type Projective {
 /// `generator` is the generator point of the curve. All points on the curve can be obtained by scalar multiplication
 /// of this point by elements of the scalar field.
 pub type CurveConfig {
-  base_field: FieldConfig,
-  scalar_field: FieldConfig,
+  base_field: f.FieldConfig,
+  scalar_field: f.FieldConfig,
   // a = 0 for pasta curves
   b: Int,
   generator: Affine,
@@ -43,10 +43,8 @@ pub type CurveConfig {
 /// Transform a point from affine coordinates to projective coordinates.
 pub fn to_projective(affine: Affine) -> Projective {
   when affine.infinity is {
-    True ->
-      Projective { x: 0, y: 1, z: 0 }
-    False ->
-      Projective { x: affine.x, y: affine.y, z: 1 }
+    True -> Projective { x: 0, y: 1, z: 0 }
+    False -> Projective { x: affine.x, y: affine.y, z: 1 }
   }
 }
 
@@ -54,27 +52,20 @@ pub fn to_projective(affine: Affine) -> Projective {
 /// other than the point at infinity.
 pub fn normalize_projective(curve: CurveConfig, p: Projective) -> Projective {
   when p.z is {
-    0 ->
-      Projective { x: 0, y: 1, z: 0 }
-    1 ->
-      p
-    _ ->
-      to_projective(to_affine(curve, p))
+    0 -> Projective { x: 0, y: 1, z: 0 }
+    1 -> p
+    _ -> to_projective(to_affine(curve, p))
   }
 }
 
 /// Transform a point from projective coordinates to affine coordinates.
 pub fn to_affine(curve: CurveConfig, projective: Projective) -> Affine {
   when projective.z is {
-    0 ->
-      Affine { x: 0, y: 0, infinity: True }
-    1 ->
-      Affine { x: projective.x, y: projective.y, infinity: False }
+    0 -> Affine { x: 0, y: 0, infinity: True }
+    1 -> Affine { x: projective.x, y: projective.y, infinity: False }
     _ -> {
-      let z_inv =
-        f.inverse(curve.base_field.modulus, projective.z)
-      let m =
-        curve.base_field.modulus
+      let z_inv = f.inverse(curve.base_field.modulus, projective.z)
+      let m = curve.base_field.modulus
       Affine {
         x: f.mul(m, projective.x, z_inv * z_inv),
         y: f.mul(m, projective.y, z_inv * z_inv * z_inv),
