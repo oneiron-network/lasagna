@@ -3,7 +3,7 @@
 
 use lasagna/curve.{CurveConfig, Projective, normalize_projective, to_projective}
 // for tests
-use lasagna/curves/pasta.{pallas}
+use lasagna/curves/bn254.{bn254 as ec}
 use lasagna/field as f
 
 /// Check if a point is the zero point (the point at infinity).
@@ -111,20 +111,20 @@ fn scalar_mul_internal(
 // Tests
 
 test scalar_mul_zero() {
-  let curve = pallas()
+  let curve = ec()
   is_zero(scalar_mul(curve, zero(), 0))? && is_zero(
     scalar_mul(curve, one(curve), 0),
   )?
 }
 
 test scalar_mul_one() {
-  let curve = pallas()
+  let curve = ec()
   let p = one(curve)
   scalar_mul(curve, p, 1) == p
 }
 
 test scalar_mul_two() {
-  let curve = pallas()
+  let curve = ec()
   let p = one(curve)
   (normalize_projective(curve, scalar_mul(curve, p, 2)) == normalize_projective(
     curve,
@@ -133,7 +133,7 @@ test scalar_mul_two() {
 }
 
 test scalar_mul_three() {
-  let curve = pallas()
+  let curve = ec()
   let p = one(curve)
   (normalize_projective(curve, scalar_mul(curve, p, 3)) == normalize_projective(
     curve,
@@ -142,7 +142,7 @@ test scalar_mul_three() {
 }
 
 test scalar_mul_four() {
-  let curve = pallas()
+  let curve = ec()
   let p = one(curve)
   (normalize_projective(curve, scalar_mul(curve, p, 4)) == normalize_projective(
     curve,
@@ -151,9 +151,9 @@ test scalar_mul_four() {
 }
 
 test scalar_mul_random() {
-  let curve = pallas()
+  let curve = ec()
   let p = one(curve)
-  let n = 385629457656789264759952547
+  let n = 3856278926475995234534534547
   let result = normalize_projective(curve, scalar_mul(curve, p, n))
   !is_zero(result)?
 }

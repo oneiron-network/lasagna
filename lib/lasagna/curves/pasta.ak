@@ -18,7 +18,7 @@ pub fn fq() {
   }
 }
 
-/// Configuration for the Pallas curve. Base field is `Fp`, scalar field is `Fq` (see `lasagna/fields.{fp, fq}`).
+/// Configuration for the Pallas curve. Base field is `Fp`, scalar field is `Fq`.
 /// The curve equation is `y^2 = x^3 + 5`.
 /// The generator point is `(1, 12418654782883325593414442427049395787963493412651469444558597405572177144507)`.
 pub fn pallas() {

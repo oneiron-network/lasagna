@@ -62,8 +62,8 @@ pub fn to_affine(curve: CurveConfig, projective: Projective) -> Affine {
     0 -> Affine { x: 0, y: 0, infinity: True }
     1 -> Affine { x: projective.x, y: projective.y, infinity: False }
     _ -> {
-      let z_inv = f.inverse(curve.base_field.modulus, projective.z)
       let m = curve.base_field.modulus
+      let z_inv = f.inverse(m, projective.z)
       Affine {
         x: f.mul(m, projective.x, z_inv * z_inv),
         y: f.mul(m, projective.y, z_inv * z_inv * z_inv),
