@@ -5,20 +5,6 @@ pub type FieldConfig {
   modulus: Int,
 }
 
-/// Field `Fp` with `modulus = 28948022309329048855892746252171976963363056481941560715954676764349967630337`.
-fn fp() {
-  FieldConfig {
-    modulus: 28948022309329048855892746252171976963363056481941560715954676764349967630337,
-  }
-}
-
-/// Field `Fq` with `modulus = 28948022309329048855892746252171976963363056481941647379679742748393362948097`.
-fn fq() {
-  FieldConfig {
-    modulus: 28948022309329048855892746252171976963363056481941647379679742748393362948097,
-  }
-}
-
 /// Multiplication in the field with modulus `m`.
 pub fn mul(m: Int, x: Int, y: Int) -> Int {
   x * y % m
@@ -92,6 +78,20 @@ fn inverse_internal(m: Int, r: Int, new_r: Int, t: Int, new_t: Int) -> Int {
 
 // Tests
 
+/// Field `Fp` with `modulus = 28948022309329048855892746252171976963363056481941560715954676764349967630337`.
+fn fp() {
+  FieldConfig {
+    modulus: 28948022309329048855892746252171976963363056481941560715954676764349967630337,
+  }
+}
+
+/// Field `Fq` with `modulus = 28948022309329048855892746252171976963363056481941647379679742748393362948097`.
+fn fq() {
+  FieldConfig {
+    modulus: 28948022309329048855892746252171976963363056481941647379679742748393362948097,
+  }
+}
+
 fn check_inverse(m: Int, x: Int) -> Bool {
   let y = inverse(m, x)
   (x != 1 && x != m - 1 || x == y)? && (y > 0)? && (y < m)? && (mul(m, x, y) == 1)?
@@ -99,7 +99,7 @@ fn check_inverse(m: Int, x: Int) -> Bool {
 
 fn check_inverse_recursive(m: Int, x: Int) -> Bool {
   when x is {
-    1 -> check_inverse(m, x)
+    0 -> True
     _ -> check_inverse(m, x) && check_inverse_recursive(m, x - 1)
   }
 }

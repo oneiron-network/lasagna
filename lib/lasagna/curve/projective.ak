@@ -1,10 +1,10 @@
 //// Elliptic curve operations in projective (Jacobian) coordinates.
 //// See https://www.hyperelliptic.org/EFD/g1p/auto-shortw-jacobian-0.html
 
-use lasagna/curves/pasta.{
-  CurveConfig, Projective, normalize_projective, pallas, to_projective,
-}
-use lasagna/fields as f
+use lasagna/curve.{CurveConfig, Projective, normalize_projective, to_projective}
+// for tests
+use lasagna/curves/pasta.{pallas}
+use lasagna/field as f
 
 /// Check if a point is the zero point (the point at infinity).
 pub fn is_zero(p: Projective) -> Bool {
@@ -148,4 +148,12 @@ test scalar_mul_four() {
     curve,
     double(curve, double(curve, p)),
   ))?
+}
+
+test scalar_mul_random() {
+  let curve = pallas()
+  let p = one(curve)
+  let n = 385629457656789264759952547
+  let result = normalize_projective(curve, scalar_mul(curve, p, n))
+  !is_zero(result)?
 }

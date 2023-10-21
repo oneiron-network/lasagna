@@ -1,8 +1,10 @@
 //// Elliptic curve operations in affine coordinates.
 //// See https://www.hyperelliptic.org/EFD/g1p/auto-shortw.html
 
-use lasagna/curves/pasta.{Affine, CurveConfig, pallas, vesta}
-use lasagna/fields as f
+use lasagna/curve.{Affine, CurveConfig}
+// for tests
+use lasagna/curves/pasta.{pallas, vesta}
+use lasagna/field as f
 
 /// Check if a point is the zero point (the point at infinity). 
 pub fn is_zero(p: Affine) {
